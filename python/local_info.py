@@ -6,7 +6,6 @@ import UnityPy
 from typing import Dict
 from lib.TableEncryptionService import ConvertString, CreateKey
 from lib.file_info import get_file_size
-from lib.filepath import FP_JP_APK
 from pathlib import Path
 
 
@@ -30,7 +29,6 @@ def local_jp_ver():
 
 
 def game_main_config():
-    ver = local_jp_ver()    
     current_directory = os.path.dirname(__file__)
     apk_assets_path = os.path.join(current_directory, "APK", "unzip", "assets")
     bin_files = Path(apk_assets_path).with_suffix("").rglob("bin/Data/*")
@@ -47,7 +45,7 @@ def game_main_config():
                 if data.name != "GameMainConfig":
                     break
                 return bytes(data.script)
-        except:
+        except (UnityPy.UnityPyException, IOError):
             pass
     
     raise RuntimeError("Unable to find GameMainConfig")

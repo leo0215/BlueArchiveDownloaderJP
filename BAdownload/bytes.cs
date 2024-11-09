@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 class Bytes
 {
-    public static async void bytesMain(string[] args)
+    public static async Task bytesMain(string[] args)
     {
         string rootDirectory = Directory.GetCurrentDirectory();
         string inputPath = Path.Combine(rootDirectory, "Downloads", "bytes");
@@ -32,7 +32,7 @@ class Bytes
 
             Console.WriteLine($"{fileNameWithoutExtension}.bytes has been converted to {fileNameWithoutExtension}.json");
         }
-        DownloadFiles.downloadMain(args);
+        await DownloadFiles.downloadMain(args);
     }
 }
 

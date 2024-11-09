@@ -9,7 +9,7 @@ internal class Program
 {
     private static readonly HttpClient client = new HttpClient();
 
-    public static async Task ProgremMain(string[] args)
+    public static async Task ProgramMain(string[] args)
     {
         try
         {
@@ -69,7 +69,7 @@ internal class Program
                 Console.WriteLine("All files downloaded successfully.");
                 await Task.WhenAll(downloadTasks);
                 // Assuming Bytes.bytesMain is a valid method in your context
-                Bytes.bytesMain(args);
+                await Bytes.bytesMain(args);
             }
             else
             {
@@ -94,7 +94,7 @@ internal class Program
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine($"Processing file path: {localFilePath}");
-                string directoryPath = Path.GetDirectoryName(localFilePath);
+                string directoryPath = Path.GetDirectoryName(localFilePath) ?? string.Empty;
                 if (!Directory.Exists(directoryPath))
                 {
                     Console.WriteLine($"Directory does not exist, creating: {directoryPath}");
@@ -133,7 +133,7 @@ internal class Program
         {
             string subDirectory = fileName.EndsWith(".bytes") ? "bytes" : "json";
             string localFilePath = Path.Combine("Downloads", subDirectory, fileName);
-            string directoryPath = Path.GetDirectoryName(localFilePath);
+            string directoryPath = Path.GetDirectoryName(localFilePath) ?? string.Empty;
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
@@ -142,7 +142,7 @@ internal class Program
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error occurred while generating local file path: {ex.Message}");
+            Console.WriteLine($"Error occurred while generatingile path: {ex.Message}");
             Console.WriteLine(ex.StackTrace);
             throw;
         }

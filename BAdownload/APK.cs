@@ -49,7 +49,9 @@ class APK
         
         try
         {
-            using (Process process = Process.Start(start))
+            Process? process = Process.Start(start);
+            if (process == null) throw new InvalidOperationException("Failed to start process");
+            using (process)
             {
                 using (StreamReader reader = process.StandardOutput)
                 {

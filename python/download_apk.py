@@ -3,7 +3,6 @@ import shutil
 from pathlib import Path
 from tqdm import tqdm
 from urllib.parse import urlencode
-from local_info import local_jp_ver
 from url import get_jp_version
 from lib.env import ENV
 from lib.filepath import FP_JP_APK

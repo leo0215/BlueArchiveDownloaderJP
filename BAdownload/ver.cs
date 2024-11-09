@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using BAdownload;
 using Newtonsoft.Json.Linq;
 
-class ver
+class Ver
 {
-    public static async Task verMain(string[] args)
+    public static void verMain(string[] args)
     {
         string url = "https://prod-noticeindex.bluearchiveyostar.com/prod/index.json";
         string versionDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "version");
@@ -15,18 +15,15 @@ class ver
 
         try
         {
-            string responseBody = Task.Run(async () =>
+            string responseBody;
+            using (HttpClient client = new HttpClient())
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    HttpResponseMessage response = await client.GetAsync(url);
-                    response.EnsureSuccessStatusCode();
-                    return await response.Content.ReadAsStringAsync();
-                }
-
-            }).GetAwaiter().GetResult();
+                HttpResponseMessage response = client.GetAsync(url).Result;
+                response.EnsureSuccessStatusCode();
+                responseBody = response.Content.ReadAsStringAsync().Result;
+            }
             JObject json = JObject.Parse(responseBody);
-            string latestClientVersion = json["LatestClientVersion"]?.ToString();
+            string? latestClientVersion = json["LatestClientVersion"]?.ToString();
             Console.WriteLine("LatestClientVersion: " + latestClientVersion);
 
             if (!Directory.Exists(versionDirectory))
@@ -41,7 +38,7 @@ class ver
                 if (GlobalData.IsForcedVersion || apkVersion == latestClientVersion)
                 {
                     Console.WriteLine("APK version matches the online version. Starting download...");
-                    Program.ProgremMain(args);
+                    Program.ProgramMain(args).Wait();
                 }
                 else
                 {

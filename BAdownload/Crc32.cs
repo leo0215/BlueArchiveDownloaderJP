@@ -7,7 +7,7 @@ public class Crc32 : HashAlgorithm
     private uint hash;
     private readonly uint seed;
     private readonly uint[] table;
-    private static uint[] defaultTable;
+    private static uint[]? defaultTable;
 
     public Crc32()
         : this(DefaultPolynomial, DefaultSeed)

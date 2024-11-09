@@ -42,13 +42,14 @@ class APKver
 
         try
         {
-            using (Process process = Process.Start(start))
+            Process? process = Process.Start(start);
+            if (process == null)
             {
-                if (process == null)
-                {
-                    Console.WriteLine("Error: Unable to start the process.");
-                    return;
-                }
+                Console.WriteLine("Error: Unable to start the process.");
+                return;
+            }
+            using (process)
+            {
 
                 using (StreamReader reader = process.StandardOutput)
                 {
@@ -70,8 +71,8 @@ class APKver
                 await process.WaitForExitAsync();
             }
 
-            
-            await url.urlMain(args);
+            //because HttpRequestMessege don't have any thread foreground,it will exit if detect function is exit.
+            Url.urlMain(args).Wait();
         }
         catch (Exception ex)
         {
