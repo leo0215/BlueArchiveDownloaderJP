@@ -141,25 +141,6 @@ internal class DownloadFiles
 
         using var response = httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead).Result;
         response.EnsureSuccessStatusCode();
-        using (var fileStream = new FileStream(destination, FileMode.Create, FileAccess.Write, FileShare.None))
-        {
-            using var httpStream = response.Content.ReadAsStreamAsync().Result;
-            const int bufferSize = 8192;
-            var buffer = new byte[bufferSize];
-            var totalBytesRead = 0L;
-            var totalBytes = response.Content.Headers.ContentLength ?? -1L;
-            int bytesRead;
-            while ((bytesRead = httpStream.ReadAsync(buffer, 0, buffer.Length).Result) > 0)
-            {
-                fileStream.WriteAsync(buffer, 0, bytesRead).Wait();
-                totalBytesRead += bytesRead;
-                if (ConsoleIsAvailable())
-                {
-                    int progress = totalBytes > 0 ? (int)((totalBytesRead * 100) / totalBytes) : 100;
-                    UpdateConsoleProgress(currentFile, totalFiles, progress);
-                }
-            }
-        }
         // Check CRC
         long actualCrc = CalculateFileCrc(destination);
         if (actualCrc != expectedCrc)
